@@ -28,8 +28,7 @@ go.work.sum
 .env
 
 # Large files that exceed GitHub's 100MB limit
-editions/S01072025.zip
-editions/S01092025.zip
+editions/
 
 # Editor/IDE
 # .idea/

@@ -1,19 +1,19 @@
 # PORTARIAS DA ANVISA
 
-### USER PROMPT
+## USER PROMPT
 
 Preciso que você extraia, do nosso banco de dados DOU, quais resoluções da Anvisa entraram em vigor e qual foi a respectiva motivação.
 
-### SYSTEM PROMPT
+## SYSTEM PROMPT
 
 * Produza um conteúdo informativo, no formato jornalístico, por meio da técnica da pirâmide invertida (o que, quem, como, quando, onde, por quê), com base no texto-base abaixo, no qual a principal informação está no primeiro parágrafo.  
 * No primeiro parágrafo, descreva o agente principal, no caso, a Anvisa (QUEM), a motivação da resolução (O QUE) e de onde retirou (ONDE).  
 * No segundo parágrafo, apresente uma explicação breve sobre o que a resolução significa. Ela pode ser estendida nos parágrafos seguintes.  
 * Nos dois finais, insira os disclaimers:  
   * A reportagem está aberta à manifestação da empresa.  
-  * *A equipe de “O TEMPO” produziu esta reportagem automaticamente por meio de inteligência artificial, com base em dados oficiais. O conteúdo passou por um processo prévio de verificação para a sua elaboração. Se você encontrar algum erro, por favor, nos informe pelo e-mail* *inteligenciaartificial@otempo.com.br.”*
+  * *A equipe de “O TEMPO” produziu esta reportagem automaticamente por meio de inteligência artificial, com base em dados oficiais. O conteúdo passou por um processo prévio de verificação para a sua elaboração. Se você encontrar algum erro, por favor, nos informe pelo e-mail* *<inteligenciaartificial@otempo.com.br>.”*
 
-#### COMPONENTES DO ARTIGO
+### COMPONENTES DO ARTIGO
 
 **Título:** Anvisa proíbe venda de azeite e outros alimentos por irregularidades
 
@@ -25,7 +25,7 @@ Preciso que você extraia, do nosso banco de dados DOU, quais resoluções da An
 
 **Editoria:** Portarias da Anvisa, Saúde e Bem-Estar
 
-### ARTIGO
+## ARTIGO
 
 A Agência Nacional de Vigilância Sanitária (Anvisa) suspendeu a venda de azeite de oliva extravirgem da marca Vale dos Vinhedos, após a constatação de irregularidades graves. A decisão foi formalizada em resolução publicada no Diário Oficial da União (DOU) \[FAZER O HIPERLINK DA PÁGINA NO DOU\] desta segunda-feira (7).
 
@@ -37,9 +37,9 @@ As decisões da Anvisa, em colaboração com o Ministério da Agricultura e Pecu
 
 A reportagem está aberta à manifestação da empresa.
 
-*A equipe de “O TEMPO” produziu esta reportagem automaticamente por meio de inteligência artificial, com base em dados oficiais. O conteúdo passou por um processo prévio de verificação para a sua elaboração. Se você encontrar algum erro, por favor, nos informe pelo e-mail inteligenciaartificial@otempo.com.br.”*
+*A equipe de “O TEMPO” produziu esta reportagem automaticamente por meio de inteligência artificial, com base em dados oficiais. O conteúdo passou por um processo prévio de verificação para a sua elaboração. Se você encontrar algum erro, por favor, nos informe pelo e-mail <inteligenciaartificial@otempo.com.br>.”*
 
-### ARTIGOS DE REFERÊNCIA
+## ARTIGOS DE REFERÊNCIA
 
 * [https://www.gov.](https://www.gov.br/anvisa/pt-br/assuntos/noticias-anvisa/2025/anvisa-proibe-medicamentos-sem-registro-e-alimento-fora-dos-padroes)br/anvisa/pt-br/assuntos/noticias-anvisa/2025/anvisa-proíbe-medicamentos-sem-registro-e-alimento-fora-dos-padrões  
 * [http://transparencia.crf-pr.org.](http://transparencia.crf-pr.org.br/noticia/view/9870/anvisa-proibe-medicamentos-sem-registro-e-alimento-fora-dos-padroes)br/noticia/view/9870/anvisa-proíbe-medicamentos-sem-registro-e-alimento-fora-dos-padrões  
@@ -47,7 +47,7 @@ A reportagem está aberta à manifestação da empresa.
 * [https://www.cnnbrasil.com.br/nacional/brasil/anvisa-proibe-marca-de-azeite-e-suspende-molho-de-alho-qualita/](https://www.cnnbrasil.com.br/nacional/brasil/anvisa-proibe-marca-de-azeite-e-suspende-molho-de-alho-qualita/)  
 * [https://diariodonordeste.verdesmares.com.br/ser-saude/anvisa-proibe-produto-infantil-recolhe-molho-de-pimenta-e-suspende-cosmetico-veja-marcas-1.3686617](https://diariodonordeste.verdesmares.com.br/ser-saude/anvisa-proibe-produto-infantil-recolhe-molho-de-pimenta-e-suspende-cosmetico-veja-marcas-1.3686617)
 
-### TRIGGERS
+## TRIGGERS
 
 * Anvisa  
 * Suspendeu  
