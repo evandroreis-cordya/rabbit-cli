@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/joho/godotenv"
 	"gopkg.in/yaml.v3"
 )
 
@@ -53,6 +54,24 @@ type EditorialConfig struct {
 }
 
 var envVarRegex = regexp.MustCompile(`\$\{([^}]+)\}`)
+
+// LoadEnvFile loads environment variables from a .env file.
+// If the file doesn't exist, it returns nil (not an error).
+// Returns an error only if the file exists but cannot be parsed.
+func LoadEnvFile(path string) error {
+	// Check if file exists
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		// File doesn't exist - this is not an error
+		return nil
+	}
+
+	// File exists, try to load it
+	if err := godotenv.Load(path); err != nil {
+		return fmt.Errorf("failed to load .env file: %w", err)
+	}
+
+	return nil
+}
 
 // LoadConfig loads configuration from a YAML file
 func LoadConfig(path string) (*Config, error) {

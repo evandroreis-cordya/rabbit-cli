@@ -111,7 +111,34 @@ image_generation:
 
 ### Environment Variables
 
-Set the following environment variables (or use `${VAR_NAME}` in config.yaml):
+Rabbit CLI supports multiple ways to provide environment variables, with the following priority order:
+
+1. **`.env` file** (if exists) - Loads variables from `.env` file in the project root
+2. **System environment variables** - Uses existing environment variables if not in `.env`
+3. **`config.yaml` placeholders** - Resolves `${VAR_NAME}` syntax from environment variables
+
+#### .env File Support
+
+You can create a `.env` file in the project root (same directory as `config.yaml`) to store your API keys and configuration. The `.env` file is **optional** - if it doesn't exist, Rabbit CLI will use existing environment variables.
+
+**Example `.env` file:**
+
+```env
+GEMINI_API_KEY=your-gemini-key-here
+OPENAI_API_KEY=your-openai-key-here
+CLAUDE_API_KEY=your-claude-key-here
+GROK_API_KEY=your-grok-key-here
+GOOGLE_API_KEY=your-google-key-here
+GOOGLE_CLOUD_PROJECT=your-project-id
+STABILITY_API_KEY=your-stability-key-here
+FLUX_API_KEY=your-flux-key-here
+```
+
+**Note:** The `.env` file should be added to `.gitignore` to prevent committing sensitive API keys to version control.
+
+#### Required Environment Variables
+
+Set the following environment variables (via `.env` file, system environment, or `${VAR_NAME}` in config.yaml):
 
 - `GEMINI_API_KEY` - Google Gemini API key
 - `OPENAI_API_KEY` - OpenAI API key (for GPT-4 and DALL-E 3)

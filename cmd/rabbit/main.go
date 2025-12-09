@@ -91,6 +91,13 @@ func main() {
 		targetSection = *sectionFlagLong
 	}
 
+	// 2.5. Load .env file (if exists) to populate environment variables
+	// This must happen before loading config.yaml so that ${VAR_NAME} placeholders can be resolved
+	if err := config.LoadEnvFile(".env"); err != nil {
+		fmt.Printf("Aviso: Falha ao carregar arquivo .env: %v\n", err)
+		fmt.Println("Continuando sem arquivo .env...")
+	}
+
 	// 3. Load Configuration
 	cfg, err := config.LoadConfig(targetConfigPath)
 	if err != nil {
