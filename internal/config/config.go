@@ -49,7 +49,7 @@ type LocalStorageConfig struct {
 // EditorialConfig represents editorial section configuration
 type EditorialConfig struct {
 	DefaultSection  string `yaml:"default_section"`
-	DouEditionsPath string `yaml:"dou_editions_path"`
+	EditoriaisPath  string `yaml:"editoriais_path"`
 }
 
 var envVarRegex = regexp.MustCompile(`\$\{([^}]+)\}`)
@@ -131,11 +131,11 @@ func validateConfig(config *Config) error {
 	}
 
 	// Validate editorial configuration
-	if config.Editorial.DouEditionsPath != "" {
+	if config.Editorial.EditoriaisPath != "" {
 		// Check if path exists (if provided)
-		if _, err := os.Stat(config.Editorial.DouEditionsPath); err != nil {
+		if _, err := os.Stat(config.Editorial.EditoriaisPath); err != nil {
 			if os.IsNotExist(err) {
-				return fmt.Errorf("editorial.dou_editions_path '%s' does not exist", config.Editorial.DouEditionsPath)
+				return fmt.Errorf("editorial.editoriais_path '%s' does not exist", config.Editorial.EditoriaisPath)
 			}
 		}
 	}
@@ -163,8 +163,8 @@ func (c *Config) GetImageProvider(name string) (*ImageProvider, error) {
 
 // GetEditorialPath returns the full path to a section's EDITORIA.md file
 func (c *Config) GetEditorialPath(section string) string {
-	if section == "" || c.Editorial.DouEditionsPath == "" {
+	if section == "" || c.Editorial.EditoriaisPath == "" {
 		return ""
 	}
-	return filepath.Join(c.Editorial.DouEditionsPath, section, "EDITORIA.md")
+	return filepath.Join(c.Editorial.EditoriaisPath, section, "EDITORIA.md")
 }

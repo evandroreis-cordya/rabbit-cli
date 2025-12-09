@@ -40,5 +40,5 @@ image_generation:
 
 editorial:
   default_section: ""  # Optional default section
-  dou_editions_path: "./dou-editions"  # Path to dou-editions directory
+  editoriais_path: "./editoriais"  # Path to editoriais directory
 

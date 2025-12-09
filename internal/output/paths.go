@@ -9,12 +9,12 @@ import (
 )
 
 // GenerateArticlePath generates the full path for an article file
-// Format: {douEditionsPath}/{section}/{sanitized-title}-{date}-{hour}.html
+// Format: {editoriaisPath}/{section}/{sanitized-title}-{date}-{hour}.html
 // Date format: YYYY-MM-DD-HHMM (e.g., 2025-01-15-1430)
 // If section is empty, defaults to "uncategorized"
-func GenerateArticlePath(section, title, douEditionsPath string) (string, error) {
-	if douEditionsPath == "" {
-		return "", fmt.Errorf("dou_editions_path is required")
+func GenerateArticlePath(section, title, editoriaisPath string) (string, error) {
+	if editoriaisPath == "" {
+		return "", fmt.Errorf("editoriais_path is required")
 	}
 
 	// Use default section if not provided
@@ -35,10 +35,10 @@ func GenerateArticlePath(section, title, douEditionsPath string) (string, error)
 	filename := fmt.Sprintf("%s-%s.html", sanitizedTitle, datetimeStr)
 
 	// Construct full path
-	fullPath := filepath.Join(douEditionsPath, section, filename)
+	fullPath := filepath.Join(editoriaisPath, section, filename)
 
 	// Ensure section directory exists
-	sectionDir := filepath.Join(douEditionsPath, section)
+	sectionDir := filepath.Join(editoriaisPath, section)
 	if err := os.MkdirAll(sectionDir, 0755); err != nil {
 		return "", fmt.Errorf("failed to create section directory: %w", err)
 	}

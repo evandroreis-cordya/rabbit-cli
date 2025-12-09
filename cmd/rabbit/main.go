@@ -40,8 +40,8 @@ func main() {
 	assetTypeFlagLong := flag.String("asset-type", "", "Asset type: image, video, local")
 	imagebankPathFlag := flag.String("ib", "", "Custom imagebank path")
 	imagebankPathFlagLong := flag.String("imagebank-path", "", "Custom imagebank path")
-	sectionFlag := flag.String("s", "", "Section from dou-editions to use (e.g., decretos-governamentais, nomeacoes)")
-	sectionFlagLong := flag.String("section", "", "Section from dou-editions to use (e.g., decretos-governamentais, nomeacoes)")
+	sectionFlag := flag.String("s", "", "Section from editoriais to use (e.g., decretos-governamentais, nomeacoes)")
+	sectionFlagLong := flag.String("section", "", "Section from editoriais to use (e.g., decretos-governamentais, nomeacoes)")
 
 	flag.Parse()
 
@@ -127,7 +127,7 @@ func main() {
 
 	// 4.5 Validate Section (if provided)
 	if targetSection != "" {
-		availableSections, err := content.GetAvailableSections(cfg.Editorial.DouEditionsPath)
+		availableSections, err := content.GetAvailableSections(cfg.Editorial.EditoriaisPath)
 		if err != nil {
 			fmt.Printf("Aviso: Falha ao verificar seções disponíveis: %v\n", err)
 		} else {
@@ -202,7 +202,7 @@ func main() {
 	var editorialContent string
 	if targetSection != "" {
 		fmt.Printf("Carregando diretrizes editoriais da seção '%s'...\n", targetSection)
-		editorial, err := content.LoadEditorialContent(targetSection, cfg.Editorial.DouEditionsPath)
+		editorial, err := content.LoadEditorialContent(targetSection, cfg.Editorial.EditoriaisPath)
 		if err != nil {
 			fmt.Printf("Aviso: %v\n", err)
 			fmt.Println("Continuando sem diretrizes editoriais...")
@@ -234,7 +234,7 @@ func main() {
 		title = "article"
 	}
 
-	articlePath, err := output.GenerateArticlePath(targetSection, title, cfg.Editorial.DouEditionsPath)
+	articlePath, err := output.GenerateArticlePath(targetSection, title, cfg.Editorial.EditoriaisPath)
 	if err != nil {
 		exitWithError(fmt.Errorf("falha ao gerar caminho do artigo: %w", err))
 	}
@@ -321,7 +321,7 @@ func createDefaultConfig() *config.Config {
 	}
 
 	cfg.Editorial.DefaultSection = ""
-	cfg.Editorial.DouEditionsPath = "./dou-editions"
+	cfg.Editorial.EditoriaisPath = "./editoriais"
 
 	return cfg
 }
@@ -345,7 +345,7 @@ func printUsage() {
 	fmt.Println("  -ip, --image-provider Image generator: dalle, imagen, stable-diffusion, flux, local")
 	fmt.Println("  -at, --asset-type    Tipo de asset: image, video, local")
 	fmt.Println("  -ib, --imagebank-path Caminho customizado para imagebank")
-	fmt.Println("  -s, --section       Seção de dou-editions para usar (ex: decretos-governamentais, nomeacoes)")
+	fmt.Println("  -s, --section       Seção de editoriais para usar (ex: decretos-governamentais, nomeacoes)")
 	fmt.Println("\nPor favor forneça o parâmetro -u para iniciar.")
 }
 

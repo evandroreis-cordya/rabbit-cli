@@ -27,6 +27,8 @@ Rabbit CLI is a modular, configurable command-line tool for the Rabbit Platform.
 - 🎭 **Persona Options**: Choose between formal, personal, or neutral writing styles
 - 📁 **Local Image Storage**: Use local imagebank directory for image assets
 - 🌐 **Auto-Browser**: Automatically opens the generated article in your default browser
+- 📂 **Section-Based Organization**: Organize articles by editorial sections with automatic directory structure
+- 📝 **Editorial Guidelines**: Load custom editorial guidelines from `EDITORIA.md` files for consistent article style
 
 ## Architecture
 
@@ -115,6 +117,34 @@ Set the following environment variables (or use `${VAR_NAME}` in config.yaml):
 - `STABILITY_API_KEY` - Stability AI API key
 - `FLUX_API_KEY` - Black Forest Labs Flux API key
 
+### Editorial Guidelines Configuration
+
+The `editorial` section in `config.yaml` configures section-based organization:
+
+```yaml
+editorial:
+  default_section: ""  # Optional default section
+  editoriais_path: "./editoriais"  # Path to editoriais directory
+```
+
+**Editorial Guidelines**: Each section in the `editoriais/` directory can contain an `EDITORIA.md` file with custom writing instructions that are automatically loaded when generating articles for that section.
+
+**Example `editoriais/portarias-anvisa/EDITORIA.md`:**
+```markdown
+# Editoria Portarias ANVISA
+
+Preciso que encontre, na página do Diário Oficial da União (DOU), 
+quais resoluções da ANVISA entraram em vigor e qual foi a respectiva motivação.
+
+A partir disso, produza um conteúdo informativo, no formato jornalístico, 
+por meio da técnica da pirâmide invertida (o que, quem, como, quando, onde, por quê)...
+```
+
+When you use `-s portarias-anvisa`, the tool automatically:
+1. Loads the editorial guidelines from `editoriais/portarias-anvisa/EDITORIA.md`
+2. Includes them in the prompt sent to the LLM
+3. Saves the article in `editoriais/portarias-anvisa/` directory
+
 ## Usage
 
 ### Basic Usage
@@ -135,6 +165,7 @@ Set the following environment variables (or use `${VAR_NAME}` in config.yaml):
 | `-ip` | `--image-provider` | Image generator: `dalle`, `imagen`, `stable-diffusion`, `flux`, `local` | From config |
 | `-at` | `--asset-type` | Asset type: `image`, `video`, `local` | `image` |
 | `-ib` | `--imagebank-path` | Custom imagebank directory path | From config |
+| `-s` | `--section` | Editorial section from editoriais (e.g., `portarias-anvisa`, `nomeacoes`) | From config |
 
 ### Examples
 
@@ -258,12 +289,50 @@ Use a custom imagebank directory:
 ./rabbit -u https://example.com/article -ip local --imagebank-path /path/to/my/images
 ```
 
-#### Real-World Use Cases
+#### Section-Based Organization Examples
 
-Generate an article from a DOU (Diário Oficial da União) URL:
+Generate an article for a specific editorial section (e.g., ANVISA ordinances):
 
 ```bash
-./rabbit -u https://www.in.gov.br/web/dou/-/portaria-n-123-de-15-de-janeiro-de-2025 -p formal -i BR
+./rabbit -u https://www.in.gov.br/web/dou/-/portaria-anvisa-123 -s portarias-anvisa
+```
+
+Generate an article for government decrees section:
+
+```bash
+./rabbit -u https://www.in.gov.br/web/dou/-/decreto-123 -s decretos-governamentais -p formal
+```
+
+Generate an article for nominations section with editorial guidelines:
+
+```bash
+./rabbit -u https://www.in.gov.br/web/dou/-/nomeacao-123 -s nomeacoes -l claude -i BR
+```
+
+Available sections include:
+- `portarias-anvisa` - ANVISA ordinances
+- `portarias-ans` - ANS ordinances
+- `decretos-governamentais` - Government decrees
+- `nomeacoes` - Appointments/nominations
+- `exoneracoes` - Dismissals
+- `medidas-provisorias` - Provisional measures
+- `destinacao-de-verbas` - Budget allocations
+- `balancos-governamentais` - Government balances
+- `reformas-ministeriais` - Ministerial reforms
+
+#### Real-World Use Cases
+
+Generate an article from a DOU (Diário Oficial da União) URL with section:
+
+```bash
+./rabbit -u https://www.in.gov.br/web/dou/-/portaria-n-123-de-15-de-janeiro-de-2025 -s portarias-anvisa -p formal -i BR
+```
+
+Generate an article from DOU with editorial guidelines automatically loaded:
+
+```bash
+./rabbit -u https://www.in.gov.br/web/dou/-/portaria-ans-456 -s portarias-ans -l gemini -p neutra
+# Automatically loads EDITORIA.md from editoriais/portarias-ans/ if it exists
 ```
 
 Generate an article from a news article URL in English:
@@ -292,25 +361,28 @@ All flags combined example:
   --idiom BR \
   --image-provider dalle \
   --asset-type image \
-  --imagebank-path ./imagebank
+  --imagebank-path ./imagebank \
+  --section portarias-anvisa
 ```
 
 Short flags version:
 
 ```bash
-./rabbit -u https://example.com/article -c config.yaml -l gemini -p neutra -i BR -ip dalle -at image -ib ./imagebank
+./rabbit -u https://example.com/article -c config.yaml -l gemini -p neutra -i BR -ip dalle -at image -ib ./imagebank -s portarias-anvisa
 ```
 
 ## How It Works
 
 1. **Configuration Loading**: Loads settings from `config.yaml` (or custom path)
 2. **Content Extraction**: Fetches and extracts text content from the provided URL
-3. **Prompt Construction**: Builds a detailed prompt based on the selected persona, language, and extracted content
-4. **LLM Generation**: Calls the selected LLM API to generate the article HTML
-5. **Image Generation**: If the LLM includes an image prompt comment, generates an image using the configured provider
-6. **Fallback Handling**: Falls back to local imagebank if API generation fails (if enabled)
-7. **File Output**: Saves the complete HTML file as `article.html`
-8. **Browser Launch**: Automatically opens the article in your default browser
+3. **Editorial Guidelines Loading**: If a section is specified, loads `EDITORIA.md` from `editoriais/{section}/` directory
+4. **Prompt Construction**: Builds a detailed prompt based on the selected persona, language, extracted content, and editorial guidelines
+5. **LLM Generation**: Calls the selected LLM API to generate the article HTML
+6. **Image Generation**: If the LLM includes an image prompt comment, generates an image using the configured provider
+7. **Fallback Handling**: Falls back to local imagebank if API generation fails (if enabled)
+8. **File Output**: Saves the complete HTML file to `editoriais/{section}/{title}-{date}-{time}.html` (or `uncategorized/` if no section)
+9. **Image Saving**: Saves generated images alongside the article with matching filename
+10. **Browser Launch**: Automatically opens the article in your default browser
 
 ## Persona Styles
 
@@ -333,6 +405,37 @@ Short flags version:
 - **Flux**: Black Forest Labs' Flux Pro model
 - **Local**: Uses images from the `./imagebank` directory (fuzzy matching by filename)
 
+## Section-Based Organization
+
+Rabbit CLI organizes articles by editorial sections, making it easy to manage content for different categories. Each section can have its own editorial guidelines and directory structure.
+
+### Setting Up Sections
+
+1. Create section directories in `editoriais/`:
+   ```bash
+   mkdir -p editoriais/portarias-anvisa
+   mkdir -p editoriais/nomeacoes
+   mkdir -p editoriais/decretos-governamentais
+   ```
+
+2. Optionally add `EDITORIA.md` files to each section with editorial guidelines:
+   ```bash
+   # Example: editoriais/portarias-anvisa/EDITORIA.md
+   # Contains writing style guidelines for ANVISA ordinances
+   ```
+
+3. Use the `-s` or `--section` flag when generating articles:
+   ```bash
+   ./rabbit -u <URL> -s portarias-anvisa
+   ```
+
+### Article Path Structure
+
+Articles are automatically saved with descriptive filenames:
+- Format: `{sanitized-title}-{YYYY-MM-DD-HHMM}.html`
+- Location: `editoriais/{section}/` or `editoriais/uncategorized/`
+- Images: Saved alongside with matching base filename
+
 ## Local Imagebank
 
 The local imagebank feature allows you to store images in a directory (`./imagebank` by default) and have Rabbit CLI automatically select matching images based on the prompt. The system uses fuzzy matching on filenames to find relevant images.
@@ -346,14 +449,38 @@ To use the imagebank:
 
 ## Output
 
-The application generates a self-contained HTML file (`article.html`) that includes:
+The application generates organized, self-contained HTML files with the following structure:
+
+### File Organization
+
+Articles are saved in a structured directory layout:
+- **With section**: `editoriais/{section}/{title}-{YYYY-MM-DD-HHMM}.html`
+- **Without section**: `editoriais/uncategorized/{title}-{YYYY-MM-DD-HHMM}.html`
+- **Images**: Saved alongside articles as `{title}-{YYYY-MM-DD-HHMM}.{ext}` (jpeg, png, etc.)
+
+Example:
+```
+editoriais/
+  ├── portarias-anvisa/
+  │   ├── portaria-anvisa-123-2025-01-15-1430.html
+  │   └── portaria-anvisa-123-2025-01-15-1430.jpeg
+  ├── nomeacoes/
+  │   └── nomeacao-ministro-2025-01-15-1500.html
+  └── uncategorized/
+      └── article-2025-01-15-1200.html
+```
+
+### HTML File Contents
+
+Each generated HTML file includes:
 
 - Semantic HTML5 structure
 - Embedded CSS styling (minimalist design)
 - Embedded JavaScript (subtle animations and interactions)
 - Responsive layout for desktop and mobile
 - Professional typography and spacing
-- Optional header image (base64 encoded or local path)
+- Header image (local file reference or base64 encoded)
+- No external dependencies (fully self-contained)
 
 ## Migration from RabbitAI
 

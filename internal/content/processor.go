@@ -76,18 +76,18 @@ Tone/Persona: `
 	return basePrompt
 }
 
-// GetAvailableSections scans the dou-editions directory and returns a list of available section names
-func GetAvailableSections(douEditionsPath string) ([]string, error) {
-	if douEditionsPath == "" {
+// GetAvailableSections scans the editoriais directory and returns a list of available section names
+func GetAvailableSections(editoriaisPath string) ([]string, error) {
+	if editoriaisPath == "" {
 		return []string{}, nil
 	}
 
-	entries, err := os.ReadDir(douEditionsPath)
+	entries, err := os.ReadDir(editoriaisPath)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return []string{}, nil
 		}
-		return nil, fmt.Errorf("failed to read dou-editions directory: %w", err)
+		return nil, fmt.Errorf("failed to read editoriais directory: %w", err)
 	}
 
 	var sections []string
@@ -102,12 +102,12 @@ func GetAvailableSections(douEditionsPath string) ([]string, error) {
 
 // LoadEditorialContent reads the EDITORIA.md file from the specified section folder
 // Returns empty string if section is empty, folder doesn't exist, or file doesn't exist (non-fatal)
-func LoadEditorialContent(section string, douEditionsPath string) (string, error) {
-	if section == "" || douEditionsPath == "" {
+func LoadEditorialContent(section string, editoriaisPath string) (string, error) {
+	if section == "" || editoriaisPath == "" {
 		return "", nil
 	}
 
-	editorialPath := filepath.Join(douEditionsPath, section, "EDITORIA.md")
+	editorialPath := filepath.Join(editoriaisPath, section, "EDITORIA.md")
 
 	// Check if file exists
 	if _, err := os.Stat(editorialPath); err != nil {
