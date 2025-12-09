@@ -1,13 +1,18 @@
 # Rabbit CLI
 
 ```text
-██████╗  █████╗ ██████╗ ██████╗ ██╗████████╗     ██████╗██╗     ██╗
-██╔══██╗██╔══██╗██╔══██╗██╔══██╗██║╚══██╔══╝    ██╔════╝██║     ██║
-██████╔╝███████║██████╔╝██████╔╝██║   ██║       ██║     ██║     ██║
-██╔══██╗██╔══██║██╔══██╗██╔══██╗██║   ██║       ██║     ██║     ██║
-██║  ██║██║  ██║██████╔╝██████╔╝██║   ██║       ╚██████╗███████╗██║
-╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚═════╝ ╚═╝   ╚═╝        ╚═════╝╚══════╝╚═╝
-                                                                    
+8888888b.           888      888      d8b 888          .d8888b.  888      8888888 
+888   Y88b          888      888      Y8P 888         d88P  Y88b 888        888   
+888    888          888      888          888         888    888 888        888   
+888   d88P  8888b.  88888b.  88888b.  888 888888      888        888        888   
+8888888P"      "88b 888 "88b 888 "88b 888 888         888        888        888   
+888 T88b   .d888888 888  888 888  888 888 888         888    888 888        888   
+888  T88b  888  888 888 d88P 888 d88P 888 Y88b.       Y88b  d88P 888        888   
+888   T88b "Y888888 88888P"  88888P"  888  "Y888       "Y8888P"  88888888 8888888 
+                                                                                  
+Version: 1.0.0 
+Copyright (C) 2025 Cordya AI and Sempre Editora. Created by AI Workers from MaxwellAI                                                                                 
+                                                                                                                                                   
 ```
 
 Rabbit CLI is a modular, configurable command-line tool for the Rabbit Platform. The Rabbit Platform generates compelling, self-contained journalistic articles in based on the contents from DOU (Diário Oficial da União) using Large Language Models (LLMs). It extracts content from DOU and uses AI to create polished, modern, and minimalist articles with configurable image generation from multiple providers.
@@ -51,7 +56,7 @@ Rabbit CLI uses a modular architecture with separate packages for:
 
 ```bash
 git clone <repository-url>
-cd rabbitai
+cd rabbit-cli
 go build -o rabbit ./cmd/rabbit
 ```
 
