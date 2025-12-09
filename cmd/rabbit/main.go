@@ -225,6 +225,20 @@ func main() {
 		exitWithError(fmt.Errorf("falha ao gerar artigo: %w", err))
 	}
 
+	// 8.3.5 Extract title and generate article path
+	fmt.Println("Extraindo título do artigo...")
+	title, err := output.ExtractTitle(htmlContent)
+	if err != nil {
+		fmt.Printf("Aviso: Falha ao extrair título: %v\n", err)
+		fmt.Println("Usando título padrão...")
+		title = "article"
+	}
+
+	articlePath, err := output.GenerateArticlePath(targetSection, title, cfg.Editorial.DouEditionsPath)
+	if err != nil {
+		exitWithError(fmt.Errorf("falha ao gerar caminho do artigo: %w", err))
+	}
+
 	// 8.4 Image Generation
 	fmt.Println("Analisando necessidade de imagem...")
 	imagePrompt, hasImagePrompt := output.ExtractImagePrompt(htmlContent)
@@ -242,28 +256,29 @@ func main() {
 			if err != nil {
 				fmt.Printf("Aviso: Falha ao gerar imagem: %v\n", err)
 			} else {
-				fmt.Println("Imagem gerada. Processando...")
-				imageDataURI := string(asset.Data)
-				htmlContent = output.InjectImageIntoHTML(htmlContent, imageDataURI, imagePrompt)
+				// Process and save image
+				if err := processAndSaveImage(asset, articlePath, &htmlContent, imagePrompt); err != nil {
+					fmt.Printf("Aviso: %v\n", err)
+				}
 			}
 		} else {
-			fmt.Println("Imagem gerada. Processando...")
-			imageDataURI := string(asset.Data)
-			htmlContent = output.InjectImageIntoHTML(htmlContent, imageDataURI, imagePrompt)
+			// Process and save image
+			if err := processAndSaveImage(asset, articlePath, &htmlContent, imagePrompt); err != nil {
+				fmt.Printf("Aviso: %v\n", err)
+			}
 		}
 	} else {
 		fmt.Println("Nenhuma descrição de imagem encontrada.")
 	}
 
 	// 9. Save and Open
-	filename := "article.html"
-	err = output.SaveHTML(filename, htmlContent)
+	err = output.SaveHTML(articlePath, htmlContent)
 	if err != nil {
 		exitWithError(fmt.Errorf("falha ao salvar arquivo: %w", err))
 	}
 
-	fmt.Printf("Artigo salvo em %s\n", filename)
-	if err := output.OpenBrowser(filename); err != nil {
+	fmt.Printf("Artigo salvo em %s\n", articlePath)
+	if err := output.OpenBrowser(articlePath); err != nil {
 		fmt.Printf("Aviso: %v\n", err)
 	}
 
@@ -338,4 +353,40 @@ func exitWithError(err error) {
 	fmt.Printf("Erro: %v\n", err)
 	fmt.Println("Errar é Humano. Sinto muito!")
 	os.Exit(1)
+}
+
+// processAndSaveImage processes an image asset and saves it to disk, updating HTML
+func processAndSaveImage(asset *imagegen.Asset, articlePath string, htmlContent *string, imagePrompt string) error {
+	fmt.Println("Imagem gerada. Processando e salvando...")
+	
+	// Extract image data from data URI
+	imageDataURI := string(asset.Data)
+	imageBytes, extractedContentType, err := output.ExtractImageFromDataURI(imageDataURI)
+	if err != nil {
+		return fmt.Errorf("falha ao extrair dados da imagem: %w", err)
+	}
+
+	// Use asset.ContentType if available, otherwise use extracted content type
+	contentType := asset.ContentType
+	if contentType == "" {
+		contentType = extractedContentType
+	}
+
+	// Generate image path
+	imagePath, err := output.GenerateImagePath(articlePath, contentType)
+	if err != nil {
+		return fmt.Errorf("falha ao gerar caminho da imagem: %w", err)
+	}
+
+	// Save image to file
+	if err := output.SaveImage(imagePath, imageBytes); err != nil {
+		return fmt.Errorf("falha ao salvar imagem: %w", err)
+	}
+
+	fmt.Printf("Imagem salva em %s\n", imagePath)
+	
+	// Update HTML to reference local image file
+	*htmlContent = output.InjectImageIntoHTML(*htmlContent, imagePath, imagePrompt)
+	
+	return nil
 }
